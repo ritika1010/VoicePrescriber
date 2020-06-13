@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:background="@color/blue_grey_active"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_margin="10dp"
-            android:textColorHint="#99B3CC">
+            android:textColorHint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="300dp"

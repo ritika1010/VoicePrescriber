@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#131A56</color>
-    <color name="colorPrimaryDark">#131A56</color>
-    <color name="secondPage">#00838F</color>
+    <!--    <color name="colorPrimary">#131A56</color>-->
+    <!--    <color name="colorPrimaryDark">#131A56</color>-->
+    <color name="colorPrimary">#69f0ae</color>
+    <color name="colorPrimaryDark">#00bfa5</color>
     <color name="colorAccent">#2196F3</color>
     <color name="text">#ffffff</color>
     <color name="text_two">#94ffffff</color>
@@ -38,4 +39,6 @@
     <color name="grey_bg_light">#fafafa</color>
 
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+
 </resources>
