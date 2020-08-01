@@ -1,11 +1,18 @@
 package com.example.tanush.sih_20;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.pdf.PdfDocument;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
@@ -15,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +30,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 public class PrescriptionActivity extends AppCompatActivity {
@@ -45,6 +60,7 @@ public class PrescriptionActivity extends AppCompatActivity {
     public String s[] = {"hello", "hiii", "hey"};
     public int p;
 
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +70,9 @@ public class PrescriptionActivity extends AppCompatActivity {
 
         json = "{\"Advice\":[\"advice take steam.\"],\"Age\":20,\"Days\":[\"5\"],\"Diagnosis\":[\"diagnosis viral fever.\"],\"Dose\":[\"after lunch\"],\"Medicines\":[\"Alpha tablet\",\"Arixtra 2.5mg Injection\",\"Banocide 50mg Syrup\"],\"PatientID\":\"ABC\",\"PatientName\":\"Pratik Patil\",\"Recommendations\":[[\"Arixtra 2.5mg Injection\",\"Arixtra 7.5mg Injection\"],[\"Banocide 120mg Syrup\",\"Banocide 50mg Syrup\",\"Banocide Pead 50mg Syrup\"]],\"Symptom\":[\"symptom weakness.\"]}";
         convert_json();
+
+
+
 
 
         for (int i = 1; i < sym.length; i++) {
@@ -144,8 +163,9 @@ public class PrescriptionActivity extends AppCompatActivity {
 
         });
 
-        Button btn = findViewById(R.id.mail);
-        btn.setOnClickListener(new View.OnClickListener() {
+        Button sendmail = findViewById(R.id.mail);
+        sendmail.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View view) {
                 Resources res = getResources();
@@ -159,9 +179,12 @@ public class PrescriptionActivity extends AppCompatActivity {
 
                 //Executing sendmail to send email
                 sm.execute();
-                Toast.makeText(PrescriptionActivity.this, "E-Mail Sent!!", Toast.LENGTH_LONG).show();
+//                Toast.makeText(PrescriptionActivity.this, "E-Mail Sent!!", Toast.LENGTH_LONG).show();
+
             }
         });
+
+
 
 
     }
@@ -214,5 +237,66 @@ public class PrescriptionActivity extends AppCompatActivity {
         }
 
     }
+
+
+//    @SuppressLint("NewApi")
+//    public void generatePDF() {
+//         PdfDocument pdfDocument = new PdfDocument();
+//        View rellayout = findViewById(R.id.prescriptionLayout);
+//        PdfDocument.PageInfo pageInfo;
+//        int height = rellayout.getHeight();
+//        int width = rellayout.getWidth();
+//        Log.v("width * height", width + "  * " + height);
+//
+//        pageInfo = new PdfDocument.PageInfo.Builder(595, height, 1).create();
+//        PdfDocument.Page page = pdfDocument.startPage(pageInfo);
+//        Canvas pres = page.getCanvas();
+//        // units are in points (1/72 of an inch)
+//        int titleBaseLine = 20;
+//        int leftMargin = 30;
+//        int leftmargindetails = 154;
+//
+//        Paint paint = new Paint();
+//        paint.setColor(Color.BLACK);
+//        //Letter Head
+//        paint.setTextSize(10);
+//        paint.setStyle(Paint.Style.FILL);
+//        paint.setStrokeWidth(1);
+//
+//        pres.drawText("Voice Prescriber", leftmargindetails + 58, titleBaseLine, paint);
+//        paint.setTextSize(6);
+//        pres.drawText("Smart India Hackathon 2020", leftmargindetails + 88, titleBaseLine = titleBaseLine + 7, paint);
+//        paint.setTextSize(7);
+//        pres.drawRect(leftMargin, titleBaseLine = titleBaseLine + 9, 565, titleBaseLine = titleBaseLine + 1, paint); //Line
+//
+//        paint.setTextSize(10);
+//        pres.drawText("PRESCRIPTION", leftmargindetails + 106, titleBaseLine = titleBaseLine + 12, paint);
+//        paint.setTextSize(7);
+//
+//
+//        pdfDocument.finishPage(page);
+//        SimpleDateFormat trail = new SimpleDateFormat("ddMMyyyyhhmmss");
+//        String pdfName = "Prescription - " + trail.format(Calendar.getInstance().getTime()) +".pdf";
+//
+//        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+//        File file = new File(path, "VoicePrescriber");
+//        file.mkdirs();
+//        File outputFile = new File(file, pdfName);
+//
+//        try {
+//            outputFile.createNewFile();
+//            OutputStream out = new FileOutputStream(outputFile);
+//            pdfDocument.writeTo(out);
+//            pdfDocument.close();
+//            out.close();
+//            String outPut = Uri.fromFile(outputFile).getPath().toString();
+//            outPut = outPut.replaceAll("/storage/emulated/0/", "Internal Storage: ");
+//            Toast.makeText(this, "Prescription Saved in " + outPut, Toast.LENGTH_LONG).show();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//    }
 
 }

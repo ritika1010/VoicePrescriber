@@ -7,8 +7,10 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.RecognitionService;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -88,43 +90,45 @@ public class DashBoardActivity extends AppCompatActivity {
                 final AlertDialog alertDialog = builder.create();
                 alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));                alertDialog.show();
 
-                speechRecognizer=speechRecognizer.createSpeechRecognizer(mview.getContext());
-                Intent intent;
-                intent=new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+//                speechRecognizer=speechRecognizer.createSpeechRecognizer(mview.getContext());
+//                Intent intent;
+//                intent=new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+//                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+//                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
 
                 final int[] flag = {0};
                 startRecording.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        db = FirebaseFirestore.getInstance();
-                        db.collection("Patient_Details").get()
-                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                        if (!queryDocumentSnapshots.isEmpty()) {
-                                            List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
-                                            for (int i = 0; i < list.size(); i++) {
-                                                if (list.get(i).get("PatientID").equals(patientID.getText().toString())) {
-                                                    Toast.makeText(getBaseContext(), "Starting Prescription", Toast.LENGTH_LONG).show();
-                                                    alertDialog.dismiss();
-                                                    flag[0]=1;
-                                                    speech();
-                                                    break;
-                                                } else {
-                                                    flag[0] =0;
-                                                }
-                                            }
+                        speech();
 
-                                            if(flag[0]==0)
-                                            {
-                                                Toast.makeText(getBaseContext(), "Patient ID not found", Toast.LENGTH_SHORT).show();
-                                            }
-
-                                        }
-                                    }
-                                });
+//                        db = FirebaseFirestore.getInstance();
+//                        db.collection("Patient_Details").get()
+//                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                                    @Override
+//                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+////                                        if (!queryDocumentSnapshots.isEmpty()) {
+////                                            List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+////                                            for (int i = 0; i < list.size(); i++) {
+////                                                if (list.get(i).get("PatientID").equals(patientID.getText().toString())) {
+////                                                    Toast.makeText(getBaseContext(), "Starting Prescription", Toast.LENGTH_LONG).show();
+////                                                    alertDialog.dismiss();
+////                                                    flag[0]=1;
+////                                                    speech();
+////                                                    break;
+////                                                } else {
+////                                                    flag[0] =0;
+////                                                }
+////                                            }
+////
+////                                            if(flag[0]==0)
+////                                            {
+////                                                Toast.makeText(getBaseContext(), "Patient ID not found", Toast.LENGTH_SHORT).show();
+////                                            }
+////
+////                                        }
+//                                    }
+//                                });
                     }
                 });
                 cancelDialog.setOnClickListener(new View.OnClickListener() {
@@ -212,7 +216,10 @@ public class DashBoardActivity extends AppCompatActivity {
     public void speech() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-IN");
+
+
+
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(intent, 5);
         } else {
@@ -228,6 +235,7 @@ public class DashBoardActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK && data != null) {
                 resultSpeech = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 String str = resultSpeech.get(0);
+                Log.e("Result Speech array" ,resultSpeech.toString());
                 Intent intent = new Intent(getApplicationContext(), MainActivityKotlin.class);
                 intent.putExtra("message", str);
 
@@ -235,5 +243,6 @@ public class DashBoardActivity extends AppCompatActivity {
             }
         }
     }
+
 
 }
